@@ -15,5 +15,7 @@
     <string name="watched_movie">Fime assitido</string>
     <string name="movie_genre">Genero</string>
     <string name="save">Salvar</string>
+    <string name="edit_movie">Edit task</string>
+    <string name="remove_movie">Remove task</string>
 
 </resources>
