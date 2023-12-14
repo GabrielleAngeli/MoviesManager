@@ -1,8 +1,19 @@
 <resources>
-    <string name="app_name">MoviesManager</string>
+    <string name="app_name">Gerenciador de filmes</string>
     <string name="title_activity_main">MainActivity</string>
 
     <string name="add_movie">Add movie</string>
-    <string name="movie_list">Movie list</string>
+    <string name="movie_list">Lista de filmes</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="register_movie">Cadastrar Filme</string>
+    <string name="name_movie">Nome do filme</string>
+    <string name="producer_name">Produtora</string>
+    <string name="year_launch">Ano de lançamento</string>
+    <string name="duration">Duração</string>
+    <string name="score">Nota</string>
+    <string name="watched_movie">Fime assitido</string>
+    <string name="movie_genre">Genero</string>
+    <string name="save">Salvar</string>
 
 </resources>

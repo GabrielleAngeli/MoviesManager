@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    tools:context="br.edu.ifsp.scl.moviesmanager.view.MovieFragment">
+
+    <EditText
+        android:id="@+id/nameEt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:hint="@string/name_movie"
+        android:inputType="text"
+        android:autofillHints="name"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <EditText
+        android:id="@+id/producerEt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:hint="@string/producer_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nameEt" />
+
+    <EditText
+        android:id="@+id/yearLaunchEt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/year_launch"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/producerEt" />
+
+    <EditText
+        android:id="@+id/durationMinutesEt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/duration"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/yearLaunchEt" />
+
+    <Spinner
+        android:id="@+id/scoreSp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/score"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/durationMinutesEt" />
+
+    <CheckBox
+        android:id="@+id/watchedCb"
+        android:layout_height="wrap_content"
+        android:text="@string/watched_movie"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scoreSp"
+         android:layout_width="0dp"/>
+
+    <Spinner
+        android:id="@+id/movieGenreSp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/movie_genre"
+        android:layout_margin="10dp"
+        android:fontFamily="sans-serif-condensed"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/watchedCb" />
+
+    <Button
+        android:id="@+id/saveBt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/save"
+        android:fontFamily="sans-serif-condensed"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/movieGenreSp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
