@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">MoviesManager</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="add_movie">Add movie</string>
+    <string name="movie_list">Movie list</string>
+
+</resources>
