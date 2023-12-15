@@ -117,7 +117,6 @@ class MovieFragment : Fragment(), OnGenderClickListener {
 
 
 
-        // Adicione um ouvinte de seleção ao Spinner
         spinnerGenero.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parentView: AdapterView<*>?,
@@ -126,8 +125,7 @@ class MovieFragment : Fragment(), OnGenderClickListener {
                 id: Long
             ) {
                 val selected = genderList[position]
-                Toast.makeText(requireActivity(), "Gênero selecionadoaaaaaaaaa: ${selected?.name}", Toast.LENGTH_SHORT).show()
-
+                fragmentMovieBinding.movieGenreSp.setSelection(position)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -183,17 +181,55 @@ class MovieFragment : Fragment(), OnGenderClickListener {
         builder.setView(view)
             .setTitle("Incluir Gênero")
             .setPositiveButton("Salvar") { dialog, which ->
-                // Obtenha o novo gênero inserido pelo usuário
                 val novoGenero = Gender(name = editTextNovoGenero.text.toString())
 
                 movieViewModel.insertGender(novoGenero)
                 movieViewModel.getGenders()
                 gendersAdapter.notifyDataSetChanged()
-                // Implemente a lógica para adicionar o novo gênero aos dados do filme ou à lista de gêneros
-                // Certifique-se de tratar a adição do novo gênero aos dados do filme
             }
             .setNegativeButton("Cancelar") { dialog, which ->
-                // Implemente a lógica para cancelar a inclusão do novo gênero
+            }
+            .show()
+    }
+
+    private fun mostrarDialogoEditarGenero(gender: Gender) {
+        val builder = AlertDialog.Builder(requireActivity())
+        val inflater = LayoutInflater.from(requireActivity())
+        val view = inflater.inflate(R.layout.add_gender, null)
+
+        val editTextNovoGenero: EditText = view.findViewById(R.id.editTextNovoGenero)
+        editTextNovoGenero.setText(gender.name)
+
+        builder.setView(view)
+            .setTitle("Editar Gênero")
+            .setPositiveButton("Salvar") { dialog, which ->
+                val novoNomeGenero = editTextNovoGenero.text.toString()
+
+                if (novoNomeGenero.isNotEmpty()) {
+                    gender.name = novoNomeGenero
+                    movieViewModel.editGender(gender)
+                    movieViewModel.getGenders()
+                    gendersAdapter.notifyDataSetChanged()
+                } else {
+                    Toast.makeText(requireActivity(), "Nome do gênero não pode estar vazio.", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Cancelar") { dialog, which ->
+            }
+            .show()
+    }
+
+    private fun mostrarDialogoExcluirGenero(gender: Gender) {
+        val builder = AlertDialog.Builder(requireActivity())
+        builder.setTitle("Excluir Gênero")
+            .setMessage("Tem certeza de que deseja excluir o gênero ${gender.name}?")
+            .setPositiveButton("Sim") { dialog, which ->
+                // Exclua o gênero
+                movieViewModel.removeGenders(gender)
+                movieViewModel.getGenders()
+                gendersAdapter.notifyDataSetChanged()
+            }
+            .setNegativeButton("Não") { dialog, which ->
             }
             .show()
     }
@@ -201,6 +237,18 @@ class MovieFragment : Fragment(), OnGenderClickListener {
     override fun onGenderClick(position: Int) {
         fragmentMovieBinding.movieGenreSp.setSelection(position)
         gendersAdapter.notifyDataSetChanged()
+    }
 
+    override fun onRemoveGenderMenuItemClick(position: Int) {
+        val selectedGender = genderList[position]
+        mostrarDialogoExcluirGenero(selectedGender)
+    }
+
+    override fun onEditGenderMenuItemClick(position: Int) {
+        val selectedGender = genderList[position]
+        fragmentMovieBinding.movieGenreSp.setSelection(position)
+        gendersAdapter.notifyDataSetChanged()
+
+        mostrarDialogoEditarGenero(selectedGender)
     }
 }

@@ -10,5 +10,5 @@ import kotlinx.parcelize.Parcelize
 data class Gender(
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0L,
-    val name: String
+    var name: String
 ) : Parcelable

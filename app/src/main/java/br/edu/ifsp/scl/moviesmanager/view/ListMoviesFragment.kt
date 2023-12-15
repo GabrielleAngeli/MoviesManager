@@ -4,9 +4,13 @@ import android.app.Activity
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
@@ -30,6 +34,7 @@ class ListMoviesFragment : Fragment(), OnMovieClickListener {
     private val navController: NavController by lazy {
         findNavController()
     }
+
     //Presenter - MVP
     private val movieViewModel: MovieViewModel by viewModels {
         MovieViewModel.MovieViewModelFactory
@@ -85,22 +90,30 @@ class ListMoviesFragment : Fragment(), OnMovieClickListener {
 
         movieViewModel.getMovies()
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        (activity as? AppCompatActivity)?.supportActionBar?.subtitle = getString(R.string.movie_list)
+        (activity as? AppCompatActivity)?.supportActionBar?.subtitle =
+            getString(R.string.movie_list)
 
-        fragmentListMoviesBinding = FragmentListMoviesBinding.inflate(inflater, container, false).apply {
-            moviesRv.layoutManager = LinearLayoutManager(context)
-            moviesRv.adapter = moviesAdapter
+        fragmentListMoviesBinding =
+            FragmentListMoviesBinding.inflate(inflater, container, false).apply {
+                moviesRv.layoutManager = LinearLayoutManager(context)
+                moviesRv.adapter = moviesAdapter
 
-            addMovieFab.setOnClickListener {
-                navController.navigate(
-                    ListMoviesFragmentDirections.actionListMoviesFragmentToMovieFragment(null, editMovie = false)
-                )
+                addMovieFab.setOnClickListener {
+                    navController.navigate(
+                        ListMoviesFragmentDirections.actionListMoviesFragmentToMovieFragment(
+                            null,
+                            editMovie = false
+                        )
+                    )
+                }
             }
-        }
+        setHasOptionsMenu(true) // Adicione esta linha aqui
+
 
         return fragmentListMoviesBinding.root
 
@@ -115,15 +128,40 @@ class ListMoviesFragment : Fragment(), OnMovieClickListener {
             )
         }
     }
+
     override fun onRemoveMovieMenuItemClick(position: Int) {
         movieViewModel.removeMove(movieList[position])
         movieList.removeAt(position)
         moviesAdapter.notifyItemRemoved(position)
     }
 
-    override fun onEditMovieMenuItemClick(position: Int)  = navigateToMovieFragment(position, true)
+    override fun onEditMovieMenuItemClick(position: Int) = navigateToMovieFragment(position, true)
 
     override fun onDoneCheckBoxClick(position: Int, checked: Boolean) {
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_filter, menu)
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId){
+            R.id.filterMovieNameMi -> {
+                if(movieList.size > 0) {
+                    movieList.sortBy { it.name }
+                    moviesAdapter.notifyDataSetChanged()
+                }
+                else Toast.makeText(requireActivity(), "Não existem filmes cadastrados.", Toast.LENGTH_SHORT).show()
+                true
+            }
+            R.id.filterMovieGradeMi -> {
+                if(movieList.size > 0) {
+                    movieList.sortBy { it.score }
+                    moviesAdapter.notifyDataSetChanged()
+                }
+                else Toast.makeText(requireActivity(), "Não existem filmes cadastrados.", Toast.LENGTH_SHORT).show()
+                true
+            }
+            else -> { false }
+        }
+    }
 }

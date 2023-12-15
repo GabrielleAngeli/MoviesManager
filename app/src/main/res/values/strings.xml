@@ -17,5 +17,6 @@
     <string name="save">Salvar</string>
     <string name="edit_movie">Edit task</string>
     <string name="remove_movie">Remove task</string>
+    <string name="filter">Filtrar</string>
 
 </resources>

@@ -54,10 +54,22 @@ class MovieViewModel(application: Application): ViewModel() {
         }
     }
 
+    fun editGender(gender: Gender){
+        CoroutineScope(Dispatchers.IO).launch {
+            movieDaoImpl.update(gender)
+        }
+    }
+
     fun getGenders() {
         CoroutineScope(Dispatchers.IO).launch {
             val tasks = movieDaoImpl.retrieveGenders()
             gendersMld.postValue(tasks)
+        }
+    }
+
+    fun removeGenders(gender: Gender) {
+        CoroutineScope(Dispatchers.IO).launch {
+            movieDaoImpl.deleteGender(gender)
         }
     }
 

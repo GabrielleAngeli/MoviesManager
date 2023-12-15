@@ -28,6 +28,12 @@ interface MovieDao {
     @Insert
     fun createGender(gender: Gender)
 
+    @Update
+    fun update(gender: Gender)
+
+    @Delete
+    fun deleteGender(gender: Gender)
+
     @Query("SELECT * FROM gender")
     fun retrieveGenders(): List<Gender>
 }

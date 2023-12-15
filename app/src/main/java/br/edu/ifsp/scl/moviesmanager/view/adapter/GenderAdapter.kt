@@ -3,6 +3,7 @@ package br.edu.ifsp.scl.moviesmanager.view.adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.Button
@@ -19,24 +20,43 @@ class GenderAdapter(
 
     override fun getCount(): Int = genders.size
 
-    override fun getItem(position: Int): Any = genders[position]
+    override fun getItem(position: Int): Any? {
+        return if (genders.isNotEmpty()) {
+            genders[position]
+        } else null
+    }
 
     override fun getItemId(position: Int): Long = position.toLong()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val gender = getItem(position) as Gender
+        val gender = if (genders.isNotEmpty()) {
+             getItem(position) as Gender
+        } else null
 
         val view: View = convertView ?: LayoutInflater.from(context).inflate(R.layout.spinner_item_layout, parent, false)
-
         val genderNameTextView: TextView = view.findViewById(R.id.genderNameTextView)
         val editButton: Button = view.findViewById(R.id.editButton)
         val deleteButton: Button = view.findViewById(R.id.deleteButton)
+        if (genders.isNotEmpty()) {
 
-        genderNameTextView.text = gender.name
-        // Adicione a lógica de seleção aqui
-        view.setOnClickListener {
-            // Notifique o ouvinte externo sobre a seleção do gênero
-            onGenderClickListener.onGenderClick(position)
+
+            genderNameTextView.text = gender?.name
+            // Adicione a lógica de seleção aqui
+            view.setOnClickListener {
+                // Notifique o ouvinte externo sobre a seleção do gênero
+                onGenderClickListener.onGenderClick(position)
+            }
+
+            editButton.setOnClickListener {
+                onGenderClickListener.onEditGenderMenuItemClick(position)
+            }
+
+            deleteButton.setOnClickListener {
+                onGenderClickListener.onRemoveGenderMenuItemClick(position)
+            }
+        } else {
+            editButton.visibility = GONE
+            deleteButton.visibility = GONE
         }
 
         return view
