@@ -35,6 +35,19 @@ class MovieViewModel(application: Application): ViewModel() {
             moviesMld.postValue(movies)
         }
     }
+
+    fun editMovie(movie: Movie){
+        CoroutineScope(Dispatchers.IO).launch {
+            movieDaoImpl.update(movie)
+        }
+    }
+
+    fun removeMove(movie: Movie) {
+        CoroutineScope(Dispatchers.IO).launch {
+            movieDaoImpl.deleteMove(movie)
+        }
+    }
+
     fun insertGender(gender: Gender) {
         CoroutineScope(Dispatchers.IO).launch {
             movieDaoImpl.createGender(gender)

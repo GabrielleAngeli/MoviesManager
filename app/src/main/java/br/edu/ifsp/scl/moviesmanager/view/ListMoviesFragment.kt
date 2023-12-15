@@ -1,16 +1,21 @@
 package br.edu.ifsp.scl.moviesmanager.view
 
+import android.app.Activity
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.edu.ifsp.scl.moviesmanager.controller.MovieViewModel
+import br.edu.ifsp.scl.moviesmanager.model.Constants
 import br.edu.ifsp.scl.moviesmanager.model.entity.Movie
 import br.edu.ifsp.scl.moviesmanager.view.adapter.MovieAdapter
 import br.edu.ifsp.scl.moviesmanager.view.adapter.OnMovieClickListener
@@ -40,6 +45,36 @@ class ListMoviesFragment : Fragment(), OnMovieClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        setFragmentResultListener(Constants.MOVIE_FRAGMENT_REQUEST_KEY) { requestKey, bundle ->
+            if (requestKey == Constants.MOVIE_FRAGMENT_REQUEST_KEY) {
+                val task = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    bundle.getParcelable(Constants.EXTRA_MOVIE, Movie::class.java)
+                } else {
+                    bundle.getParcelable(Constants.EXTRA_MOVIE)
+                }
+                task?.also { receivedTask ->
+                    movieList.indexOfFirst { it.name == receivedTask.name }.also { position ->
+                        if (position != -1) {
+                            movieViewModel.editMovie(receivedTask)
+                            movieList[position] = receivedTask
+                            moviesAdapter.notifyItemChanged(position)
+                        } else {
+                            movieViewModel.insertMovie(receivedTask)
+                            movieList.add(receivedTask)
+                            moviesAdapter.notifyItemInserted(movieList.lastIndex)
+                        }
+                    }
+                }
+
+                // Hiding soft keyboard
+                (context?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
+                    fragmentListMoviesBinding.root.windowToken,
+                    InputMethodManager.HIDE_NOT_ALWAYS
+                )
+            }
+        }
+
         movieViewModel.moviesMld.observe(requireActivity()) { movies ->
             movieList.clear()
             movies.forEachIndexed { index, task ->
@@ -47,7 +82,6 @@ class ListMoviesFragment : Fragment(), OnMovieClickListener {
                 moviesAdapter.notifyItemChanged(index)
             }
         }
-
 
         movieViewModel.getMovies()
     }
@@ -63,7 +97,7 @@ class ListMoviesFragment : Fragment(), OnMovieClickListener {
 
             addMovieFab.setOnClickListener {
                 navController.navigate(
-                    ListMoviesFragmentDirections.actionListMoviesFragmentToMovieFragment()
+                    ListMoviesFragmentDirections.actionListMoviesFragmentToMovieFragment(null, editMovie = false)
                 )
             }
         }
@@ -77,15 +111,17 @@ class ListMoviesFragment : Fragment(), OnMovieClickListener {
     private fun navigateToMovieFragment(position: Int, editMovie: Boolean) {
         movieList[position].also {
             navController.navigate(
-                ListMoviesFragmentDirections.actionListMoviesFragmentToMovieFragment()
+                ListMoviesFragmentDirections.actionListMoviesFragmentToMovieFragment(it, editMovie)
             )
         }
     }
     override fun onRemoveMovieMenuItemClick(position: Int) {
+        movieViewModel.removeMove(movieList[position])
+        movieList.removeAt(position)
+        moviesAdapter.notifyItemRemoved(position)
     }
 
-    override fun onEditMovieMenuItemClick(position: Int) {
-    }
+    override fun onEditMovieMenuItemClick(position: Int)  = navigateToMovieFragment(position, true)
 
     override fun onDoneCheckBoxClick(position: Int, checked: Boolean) {
     }

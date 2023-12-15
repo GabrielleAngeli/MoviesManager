@@ -19,4 +19,5 @@ data class Movie (
     var durationMinutes: Int = 0,
     var watched: Boolean = false,
     var score: Int = 0,
-    ) : Parcelable {  }
+    var movieGenresPosition:  Int = 0
+    ) : Parcelable
