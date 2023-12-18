@@ -112,7 +112,7 @@ class ListMoviesFragment : Fragment(), OnMovieClickListener {
                     )
                 }
             }
-        setHasOptionsMenu(true) // Adicione esta linha aqui
+        setHasOptionsMenu(true)
 
 
         return fragmentListMoviesBinding.root
